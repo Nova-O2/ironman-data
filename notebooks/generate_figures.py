@@ -250,9 +250,19 @@ def figure3(df) -> None:
 
 # --------------------------------------------------------------------------- 4
 def figure4(df) -> None:
+    """Participation, finish time and non-completion over the covered period.
+
+    Three panels, not four. The submitted version carried a fourth showing the
+    female participation rate pooled across distances, which Figure 5(b) now
+    shows stratified by distance — the same quantity at higher resolution. It was
+    also the only panel in the paper that no sentence referred to. Keeping both
+    would publish one metric twice and invite exactly the question this round
+    spent its time answering.
+    """
     dy = year_frame(df)
     fin = dy[(dy.race_type == 'im') & (dy.finish_status == 'FIN')]
-    fig, axes = plt.subplots(2, 2, figsize=(16, 10))
+    fig, axes = plt.subplots(1, 3, figsize=(21, 5.5))
+    axes = axes.reshape(1, 3)
 
     yearly = dy.groupby(['race_year', 'race_type']).size().unstack(fill_value=0)
     yearly = C.relabel(yearly, C.RACE_TYPE_LABELS, axis=1)
@@ -278,22 +288,13 @@ def figure4(df) -> None:
     for col, color, marker in ((C.LABEL_IM, C.COLOR_IM, 'o'),
                                (C.LABEL_HIM, C.COLOR_HIM, 's')):
         if col in dnf.columns:
-            axes[1, 0].plot(dnf.index, dnf[col], f'{marker}-', color=color, lw=2,
+            axes[0, 2].plot(dnf.index, dnf[col], f'{marker}-', color=color, lw=2,
                             markersize=4, label=col)
-    axes[1, 0].set_ylabel('DNF (%)')
-    axes[1, 0].axvspan(*C.COVID_SPAN, alpha=0.12, color=C.COLOR_COVID, label=C.COVID_LABEL)
-    axes[1, 0].legend(fontsize=9)
-    mark_partial_season(axes[1, 0], dnf.index)
-    panel_tag(axes[1, 0], '(c)')
-
-    fem = dy.groupby('race_year').gender.apply(lambda s: (s == 'Female').mean() * 100)
-    axes[1, 1].plot(fem.index, fem.values, 'o-', color=C.COLOR_HIM, lw=2, markersize=4)
-    axes[1, 1].fill_between(fem.index, fem.values, alpha=0.15, color=C.COLOR_HIM)
-    axes[1, 1].set_ylabel('Female (%)')
-    axes[1, 1].axvspan(*C.COVID_SPAN, alpha=0.12, color=C.COLOR_COVID, label=C.COVID_LABEL)
-    axes[1, 1].legend(fontsize=9)
-    mark_partial_season(axes[1, 1], fem.index)
-    panel_tag(axes[1, 1], '(d)')
+    axes[0, 2].set_ylabel('DNF (%)')
+    axes[0, 2].axvspan(*C.COVID_SPAN, alpha=0.12, color=C.COLOR_COVID, label=C.COVID_LABEL)
+    axes[0, 2].legend(fontsize=9)
+    mark_partial_season(axes[0, 2], dnf.index)
+    panel_tag(axes[0, 2], '(c)')
 
     fig.tight_layout()
     save(fig, 'Figure4.tiff')
