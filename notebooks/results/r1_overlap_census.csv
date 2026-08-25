@@ -1,0 +1,6 @@
+# generated: 2026-08-25T18:18:36+00:00
+# host: seffrin-server  python: 3.13.12  pandas: 3.0.2
+# source: ironman_official_all.csv  bytes: 478375177  mtime: 2026-03-28T07:27:16+00:00
+# deterministic: no sampling, no randomness, no seed required
+race_years_both,race_years_official_only,race_years_supplementary_only,race_years_total,records_official_in_overlap,records_supplementary_in_overlap,records_supplementary_only,overlap_full_distance,overlap_half_distance,overlap_year_min,overlap_year_max
+559,613,382,1554,1000995,998991,665179,340,219,2003,2026

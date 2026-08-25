@@ -1,0 +1,6 @@
+# generated: 2026-08-25T16:49:33+00:00
+# host: seffrin-server  python: 3.13.12  pandas: 3.0.2
+# source: ironman_official_all.csv  bytes: 478375177  mtime: 2026-03-28T07:27:16+00:00
+# deterministic: no sampling, no randomness, no seed required
+race_years,year_min,year_max,n_full,n_half,match_rate_exact_median,match_rate_norm_median,match_rate_canon_median,split_pairs,split_exact,split_agreement_pct,swim_sec_agreement_pct,t1_sec_agreement_pct,bike_sec_agreement_pct,t2_sec_agreement_pct,run_sec_agreement_pct,overall_sec_agreement_pct
+559,2003,2026,340,219,95.32755298651252,95.78794480755265,96.37074260189839,4732776,4674110,98.76043150996371,99.0980862533355,98.66044853979417,98.61941947294352,98.63222670716151,98.49839398021918,99.05509005688823

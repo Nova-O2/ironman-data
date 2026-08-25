@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / IDE
+desktop.ini
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large data files (available on Zenodo)
+data/collection/results/
+data/**/*.csv
+*.json
+!data/collection/event_uuids_full.csv
+!data/collection/all_subevents.csv
+!data/collection/race_metadata.csv
+
+# Scraper state (temporary)
+data/collection/scrape_progress.json
+data/collection/progress.json
+data/collection/remaining_ids.json
+
+# Manuscript and build (kept in the authors' working repository)
+manuscript/
+Makefile
+scripts/
+
+# Generated exports
+*.docx
+
+# Editorial working folders
+_*/
+bundles/
+*.tmp

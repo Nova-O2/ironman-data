@@ -1,0 +1,105 @@
+# generated: 2026-08-25T19:35:25+00:00
+# host: seffrin-server  python: 3.13.12  pandas: 3.0.2
+# source: ironman_merged.csv  bytes: 516161658  mtime: 2026-03-28T11:07:15+00:00
+# deterministic: no sampling, no randomness, no seed required
+artefact,claim,printed,actual,delta,status,location
+manuscript,n_records,2706922,2706922.0,0.0,ok,Abstract; Results §Dataset composition
+manuscript,n_full,1340799,1340799.0,0.0,ok,Results §Dataset composition
+manuscript,pct_full,49.5,49.5322,0.0322,ok,Results §Dataset composition
+manuscript,n_half,1366123,1366123.0,0.0,ok,Results §Dataset composition
+manuscript,pct_half,50.5,50.4678,-0.0322,ok,Results §Dataset composition
+manuscript,n_official,2041743,2041743.0,0.0,ok,Abstract; Results §Dataset composition
+manuscript,pct_official,75.4,75.4267,0.0267,ok,Abstract; Results; Table 1 footnote
+manuscript,n_supplementary,665179,665179.0,0.0,ok,Results §Dataset composition
+manuscript,pct_supplementary,24.6,24.5733,-0.0267,ok,Abstract; Results §Dataset composition
+manuscript,n_fin,2239335,2239335.0,0.0,ok,Results §Finish status
+manuscript,pct_fin,82.7,82.7262,0.0262,ok,Results §Finish status
+manuscript,n_dnf,176416,176416.0,0.0,ok,Results §Finish status
+manuscript,pct_dnf,6.5,6.5172,0.0172,ok,Results §Finish status
+manuscript,n_dns,271615,271615.0,0.0,ok,Results §Finish status
+manuscript,pct_dns,10.0,10.0341,0.0341,ok,Results §Finish status
+manuscript,n_dq,9214,9214.0,0.0,ok,Results §Finish status
+manuscript,pct_dq,0.3,0.3404,0.0404,ok,Results §Finish status
+manuscript,n_nostatus,10342,10342.0,0.0,ok,Results §Finish status
+manuscript,cov_swim,85.9,85.8703,-0.0297,ok,Results §Split times
+manuscript,cov_bike,85.9,85.9389,0.0389,ok,Results §Split times
+manuscript,cov_run,82.9,82.9086,0.0086,ok,Results §Split times
+manuscript,cov_overall,83.0,82.9702,-0.0298,ok,Results §Split times
+manuscript,cov_t1,84.2,84.1868,-0.0132,ok,Abstract; Results §Split times; §Completeness
+manuscript,cov_t2,84.1,84.0881,-0.0119,ok,Results §Split times; §Completeness
+manuscript,n_awa,1478052,1478052.0,0.0,ok,Results §Additional fields
+manuscript,pct_awa,54.6,54.6027,0.0027,ok,Results §Additional fields
+manuscript,n_distance,1537761,1537761.0,0.0,ok,Results §Additional fields
+manuscript,pct_distance,56.8,56.8085,0.0085,ok,Results §Additional fields
+manuscript,n_male,2098548,2098548.0,0.0,ok,Results §Demographics
+manuscript,pct_male,77.5,77.5252,0.0252,ok,Results §Demographics
+manuscript,n_female,594978,594978.0,0.0,ok,Results §Demographics
+manuscript,pct_female,22.0,21.9799,-0.0201,ok,Results §Demographics
+manuscript,n_gender_unknown,13396,13396.0,0.0,ok,Results §Demographics
+manuscript,n_iso_codes,251,251.0,0.0,ok,Results §Demographics
+manuscript,n_fin_full,1094780,1094780.0,0.0,ok,Results §Split times; Figure 2 caption
+manuscript,n_fin_half,1144555,1144555.0,0.0,ok,Results §Split times
+manuscript,consistency_n,2139756,2139756.0,0.0,ok,Results §Internal consistency
+manuscript,consistency_exact_pct,76.9,76.9364,0.0364,ok,Results §Internal consistency
+manuscript,consistency_1s_pct,98.3,98.3039,0.0039,ok,Results §Internal consistency
+manuscript,consistency_5s_pct,100.0,99.9973,-0.0027,ok,Results §Internal consistency — R1-Rev2-Q19
+manuscript,consistency_over60_n,57,57.0,0.0,ok,Results §Internal consistency
+manuscript,n_t1_missing_full_fin,42972,42972.0,0.0,ok,Results §Transition time coverage
+manuscript,n_t1_present_full_fin,1051808,1051808.0,0.0,ok,Results §Transition time coverage
+Table 1,name,100.0,100.0,-0.0,ok,Table 1 Coverage (%)
+Table 1,bib,100.0,100.0,-0.0,ok,Table 1 Coverage (%)
+Table 1,country,99.6,99.6,0.0,ok,Table 1 Coverage (%)
+Table 1,country_iso2,74.2,74.16,-0.04,ok,Table 1 Coverage (%)
+Table 1,age_group,99.6,99.62,0.02,ok,Table 1 Coverage (%)
+Table 1,event_name,99.6,99.62,0.02,ok,Table 1 Coverage (%)
+Table 1,event_id,99.6,99.62,0.02,ok,Table 1 Coverage (%)
+Table 1,swim_sec,85.9,85.87,-0.03,ok,Table 1 Coverage (%)
+Table 1,t1_sec,84.2,84.19,-0.01,ok,Table 1 Coverage (%)
+Table 1,bike_sec,85.9,85.94,0.04,ok,Table 1 Coverage (%)
+Table 1,t2_sec,84.1,84.09,-0.01,ok,Table 1 Coverage (%)
+Table 1,run_sec,82.9,82.91,0.01,ok,Table 1 Coverage (%)
+Table 1,overall_sec,83.0,82.97,-0.03,ok,Table 1 Coverage (%)
+Table 1,finish_status,99.6,99.62,0.02,ok,Table 1 Coverage (%)
+Table 1,rank_overall,95.6,95.57,-0.03,ok,Table 1 Coverage (%)
+Table 1,rank_gender,95.4,95.43,0.03,ok,Table 1 Coverage (%)
+Table 1,rank_group,95.6,95.55,-0.05,ok,Table 1 Coverage (%)
+Table 1,swim_rank,96.6,96.62,0.02,ok,Table 1 Coverage (%)
+Table 1,bike_rank,96.3,96.3,0.0,ok,Table 1 Coverage (%)
+Table 1,run_rank,95.4,95.39,-0.01,ok,Table 1 Coverage (%)
+Table 1,awa_points,54.6,54.6,0.0,ok,Table 1 Coverage (%)
+Table 1,swim_distance_km,63.2,63.22,0.02,ok,Table 1 Coverage (%)
+Table 1,bike_distance_km,64.2,64.21,0.01,ok,Table 1 Coverage (%)
+Table 1,run_distance_km,63.2,63.16,-0.04,ok,Table 1 Coverage (%)
+Table 1,total_distance_km,56.8,56.81,0.01,ok,Table 1 Coverage (%)
+Table 1,race_type,100.0,100.0,0.0,ok,Table 1 Coverage (%)
+Table 1,race_year,100.0,100.0,0.0,ok,Table 1 Coverage (%)
+Table 1,source,100.0,100.0,0.0,ok,Table 1 Coverage (%)
+R1 analysis,race_years,559,559.0,0.0,ok,Results §Cross-source agreement; Table 2
+R1 analysis,split_pairs,4732776,4732776.0,0.0,ok,Results §Cross-source agreement
+R1 analysis,split_agreement_pct,98.76,98.7604,0.0004,ok,Results §Cross-source agreement
+R1 analysis,n_full,340,340.0,0.0,ok,Results §Cross-source agreement
+R1 analysis,n_half,219,219.0,0.0,ok,Results §Cross-source agreement
+R1 analysis,match_rate_exact_median,95.3,95.3276,0.0276,ok,Results §Cross-source agreement
+R1 analysis,match_rate_canon_median,96.4,96.3707,-0.0293,ok,Results §Cross-source agreement
+R1 analysis,event_series,128,128.0,0.0,ok,Methods §Event discovery
+R1 analysis,subevents_enumerated,1235,1235.0,0.0,ok,Methods §Data collection — official platform
+R1 analysis,official_race_years_with_results,1172,1172.0,0.0,ok,Methods §Data collection — official platform
+R1 analysis,official_records_total,2041743,2041743.0,0.0,ok,Methods §Data collection — official platform
+R1 analysis,discovered_without_results,63,63.0,0.0,ok,Methods §Data collection — official platform
+R1 analysis,discovered_without_results_2021,28,28.0,0.0,ok,Methods §Data collection — official platform
+R1 analysis,supplementary_race_years,382,382.0,0.0,ok,Methods §Data collection — supplementary source
+R1 analysis,supplementary_records,665179,665179.0,0.0,ok,Methods §Data collection — supplementary source
+R1 analysis,total_race_years,1554,1554.0,0.0,ok,Methods §Data merging
+R1 analysis,race_years_both,559,559.0,0.0,ok,Methods §Data merging
+R1 analysis,race_years_official_only,613,613.0,0.0,ok,Methods §Data merging
+R1 analysis,race_years_supplementary_only,382,382.0,0.0,ok,Methods §Data merging
+R1 analysis,race_years_total,1554,1554.0,0.0,ok,Methods §Data merging
+R1 analysis,merge rule: baseline (no normalisation),0,0,0,ok,Methods §Data merging
+R1 analysis,merge rule: generic rules only,537,537,0,ok,Methods §Data merging
+R1 analysis,merge rule: full (generic + championship prefixes),559,559,0,ok,Methods §Data merging
+R1 analysis,median finish (him),5:53:16,5:53:16,,ok,Results §Physiological plausibility; Discussion §Practical guidance
+R1 analysis,median finish (im),12:25:37,12:25:37,,ok,Discussion §Practical guidance
+R1 analysis,T1 n with,1051808,1051808,0,ok,Results §Transition time coverage
+R1 analysis,T1 n without,42972,42972,0,ok,Results §Transition time coverage
+R1 analysis,T2 n with,1069074,1069074,0,ok,Results §Transition time coverage
+R1 analysis,T2 n without,25706,25706,0,ok,Results §Transition time coverage

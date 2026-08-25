@@ -1,0 +1,13 @@
+# generated: 2026-08-25T16:49:43+00:00
+# host: seffrin-server  python: 3.13.12  pandas: 3.0.2
+# source: ironman_merged.csv  bytes: 516161658  mtime: 2026-03-28T11:07:15+00:00
+# deterministic: no sampling, no randomness, no seed required
+dimension,,has_t1,has_t2,n
+source,coachcox,83.27,83.07,665179
+source,official,84.48,84.42,2041743
+race_type,him,83.74,84.93,1366123
+race_type,im,84.64,83.23,1340799
+finish_status,DNF,75.07,42.83,176416
+finish_status,DNS,0.02,0.01,271615
+finish_status,DQ,1.41,1.23,9214
+finish_status,FIN,95.84,98.27,2239335
