@@ -106,3 +106,7 @@ The merged CSV contains 28 columns. See Table 1 in the manuscript for the comple
 - Self-imposed rate limiting respects both platforms' infrastructure
 - The CoachCox scraper references a Kaggle races.csv for initial race IDs; this can be replaced with `race_metadata.csv`
 - Large CSV files are not tracked in git — they are reproducible via the scripts above and available on Zenodo
+
+## Note on the CoachCox API version
+
+The article prints the supplementary endpoint as  with the access date 27 March 2026, which was the namespace version that day. The maintainer has since moved it to ;  now uses . If the scraper returns , look up the current namespace at https://www.coachcox.co.uk/wp-json/ and update .

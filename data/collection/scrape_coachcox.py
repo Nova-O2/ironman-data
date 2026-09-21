@@ -2,7 +2,7 @@
 CoachCox Ironman Results Scraper
 Downloads race results via the public JSON API.
 
-API endpoint: https://www.coachcox.co.uk/wp-json/imstats/v1.90/race/results/{RACE_ID}
+API endpoint: https://www.coachcox.co.uk/wp-json/imstats/v1.92/race/results/{RACE_ID}  (v1.90 at collection time)
 Returns: flat JSON array of athlete objects with swim/T1/bike/T2/run splits in seconds.
 
 Usage:
@@ -19,7 +19,11 @@ import os
 import sys
 from pathlib import Path
 
-BASE_URL = "https://www.coachcox.co.uk/wp-json/imstats/v1.90/race/results"
+# The namespace version changes over time. v1.90 was current on the collection day
+# (27 March 2026, the access date printed in the article); the site moved to v1.92
+# afterwards. Check https://www.coachcox.co.uk/wp-json/ for the current one if this
+# returns 404 rest_no_route.
+BASE_URL = "https://www.coachcox.co.uk/wp-json/imstats/v1.92/race/results"
 DELAY = 1.5  # seconds between requests (be respectful)
 OUTPUT_DIR = Path(__file__).parent / "results"
 COMBINED_CSV = Path(__file__).parent / "coachcox_all_results.csv"
