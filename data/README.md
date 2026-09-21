@@ -109,4 +109,4 @@ The merged CSV contains 28 columns. See Table 1 in the manuscript for the comple
 
 ## Note on the CoachCox API version
 
-The article prints the supplementary endpoint as  with the access date 27 March 2026, which was the namespace version that day. The maintainer has since moved it to ;  now uses . If the scraper returns , look up the current namespace at https://www.coachcox.co.uk/wp-json/ and update .
+The article prints the supplementary endpoint as `.../imstats/v1.90/race/results/{race-id}` with the access date 27 March 2026, which was the namespace version that day. The maintainer has since moved it to `v1.92`; `scrape_coachcox.py` now uses `v1.92`. If the scraper returns `404 rest_no_route`, look up the current namespace at https://www.coachcox.co.uk/wp-json/ and update `BASE_URL`.
