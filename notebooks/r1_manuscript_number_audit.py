@@ -84,7 +84,8 @@ CLAIMS = {
     # as countries (R1-Int-3).
     'n_iso_codes': (251, 0, 'Results §Demographics'),
 
-    'n_fin_full': (1_094_780, 0, 'Results §Split times; Figure 2 caption'),
+    # Figure 3 in R2 numbering; it was Figure 2 when this claim was first audited.
+    'n_fin_full': (1_094_780, 0, 'Results §Split times; Figure 3 caption'),
     'n_fin_half': (1_144_555, 0, 'Results §Split times'),
 
     'consistency_n': (2_139_756, 0, 'Results §Internal consistency'),

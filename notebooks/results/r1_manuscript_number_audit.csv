@@ -1,4 +1,4 @@
-# generated: 2026-08-25T19:35:25+00:00
+# generated: 2026-09-01T02:02:33+00:00
 # host: seffrin-server  python: 3.13.12  pandas: 3.0.2
 # source: ironman_merged.csv  bytes: 516161658  mtime: 2026-03-28T11:07:15+00:00
 # deterministic: no sampling, no randomness, no seed required
@@ -37,7 +37,7 @@ manuscript,n_female,594978,594978.0,0.0,ok,Results §Demographics
 manuscript,pct_female,22.0,21.9799,-0.0201,ok,Results §Demographics
 manuscript,n_gender_unknown,13396,13396.0,0.0,ok,Results §Demographics
 manuscript,n_iso_codes,251,251.0,0.0,ok,Results §Demographics
-manuscript,n_fin_full,1094780,1094780.0,0.0,ok,Results §Split times; Figure 2 caption
+manuscript,n_fin_full,1094780,1094780.0,0.0,ok,Results §Split times; Figure 3 caption
 manuscript,n_fin_half,1144555,1144555.0,0.0,ok,Results §Split times
 manuscript,consistency_n,2139756,2139756.0,0.0,ok,Results §Internal consistency
 manuscript,consistency_exact_pct,76.9,76.9364,0.0364,ok,Results §Internal consistency

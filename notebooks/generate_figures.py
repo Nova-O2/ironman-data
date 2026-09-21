@@ -17,15 +17,26 @@ That is exactly the pattern of the published figure.
 Every label mapping here goes through `_common.relabel`, which maps by key and
 raises if any label is unmapped.
 
-Changes against the submitted figures:
-  Figure 1  sources correctly labelled (R1-Int-1); panel (c) gains T2
-  Figure 2  transition panels in minutes rather than hours (R1-Rev2-Q21)
-  Figure 3  T2 alongside T1 in all four panels (R1-Rev2-Q16, Q22)
-  Figure 4  2026 marked as a partial season, COVID-19 period labelled precisely
-            (R1-Rev2-Q11, Q24)
-  Figure 5  new — participation by sex over time, as composition (R1-Rev2-Q23)
+**Renumbered in R2 (R2-Rev2-Q2).** The figures are now numbered in order of first
+citation in the body, which they were not before: the text cited 1, 4, 2, 5, 3 and
+the document laid them out 1, 2, 5, 4, 3, so Figure 5 appeared ahead of Figure 4.
+The mapping applied, R1 number -> R2 number, is 1->1, 4->2, 2->3, 5->4, 3->5. The
+images themselves did not change. Anything that quotes a figure number from the R1
+round — including the response letter published with the reviews — refers to the
+old numbering.
 
-Figure 5 is deliberately descriptive. A resource description that is read as an
+Changes against the submitted figures, in R2 numbering:
+  Figure 1  sources correctly labelled (R1-Int-1); panel (c) gains T2
+  Figure 2  2026 marked as a partial season, COVID-19 period labelled precisely
+            (R1-Rev2-Q11, Q24) — Figure 4 in R1
+  Figure 3  transition panels in minutes rather than hours (R1-Rev2-Q21) —
+            Figure 2 in R1
+  Figure 4  added in R1 — participation by sex over time, as composition
+            (R1-Rev2-Q23) — Figure 5 in R1
+  Figure 5  T2 alongside T1 in all four panels (R1-Rev2-Q16, Q22) — Figure 3
+            in R1
+
+Figure 4 is deliberately descriptive. A resource description that is read as an
 empirical study invites the wrong criticism, so this figure shows composition and
 the Results text does not interpret it.
 
@@ -87,6 +98,19 @@ def hms(seconds: float) -> str:
     return f'{s // 3600}:{(s % 3600) // 60:02d}:{s % 60:02d}'
 
 
+def thousands(n: float) -> str:
+    """Journal number style: a thousands separator from five digits up, none at four.
+
+    Asked for at proofreading (MDPI, 2026-09-15): "10000" -> "10,000" but "1,200" ->
+    "1200". Applied to every count drawn inside a figure — axis ticks and panel
+    labels alike — so the figures match the text, which already followed the rule.
+    """
+    return f'{n:,.0f}' if abs(n) >= 10_000 else f'{n:.0f}'
+
+
+COUNT_FORMATTER = mticker.FuncFormatter(lambda x, _: thousands(x))
+
+
 def panel_tag(ax, tag: str) -> None:
     ax.text(0.02, 0.95, tag, transform=ax.transAxes, fontsize=13,
             fontweight='bold', va='top')
@@ -132,6 +156,7 @@ def figure1(df) -> None:
     axes[1].legend(title='Source')
     axes[1].set_ylabel('Records')
     axes[1].set_xlabel('')
+    axes[1].yaxis.set_major_formatter(COUNT_FORMATTER)
     mark_partial_season(axes[1], yearly.index)
     panel_tag(axes[1], '(b)')
 
@@ -154,7 +179,66 @@ def figure1(df) -> None:
 
 # --------------------------------------------------------------------------- 2
 def figure2(df) -> None:
-    """Transitions in minutes; the other four disciplines stay in hours."""
+    """Participation, finish time and non-completion over the covered period.
+
+    Figure 4 in R1, renumbered here because the body cites it first, right after
+    Figure 1.
+
+    Three panels, not four. The submitted version carried a fourth showing the
+    female participation rate pooled across distances, which Figure 4(b) now
+    shows stratified by distance — the same quantity at higher resolution. It was
+    also the only panel in the paper that no sentence referred to. Keeping both
+    would publish one metric twice and invite exactly the question this round
+    spent its time answering.
+    """
+    dy = year_frame(df)
+    fin = dy[(dy.race_type == 'im') & (dy.finish_status == 'FIN')]
+    fig, axes = plt.subplots(1, 3, figsize=(21, 5.5))
+    axes = axes.reshape(1, 3)
+
+    yearly = dy.groupby(['race_year', 'race_type']).size().unstack(fill_value=0)
+    yearly = C.relabel(yearly, C.RACE_TYPE_LABELS, axis=1)
+    yearly.plot.area(ax=axes[0, 0], color=[C.COLOR_HIM, C.COLOR_IM], alpha=0.85)
+    axes[0, 0].legend(title='Race Type')
+    axes[0, 0].set_ylabel('Records')
+    axes[0, 0].set_xlabel('')
+    axes[0, 0].yaxis.set_major_formatter(COUNT_FORMATTER)
+    mark_partial_season(axes[0, 0], yearly.index)
+    panel_tag(axes[0, 0], '(a)')
+
+    med = fin.groupby('race_year').overall_sec.median() / 3600
+    axes[0, 1].plot(med.index, med.values, 'o-', color=C.COLOR_IM, lw=2, markersize=4)
+    axes[0, 1].set_ylabel('Hours')
+    axes[0, 1].axvspan(*C.COVID_SPAN, alpha=0.12, color=C.COLOR_COVID, label=C.COVID_LABEL)
+    axes[0, 1].legend(fontsize=9)
+    mark_partial_season(axes[0, 1], med.index)
+    panel_tag(axes[0, 1], '(b)')
+
+    starters = dy[dy.finish_status.isin(['FIN', 'DNF', 'DQ'])]
+    dnf = (starters.assign(is_dnf=starters.finish_status == 'DNF')
+           .groupby(['race_year', 'race_type']).is_dnf.mean().unstack() * 100)
+    dnf = C.relabel(dnf, C.RACE_TYPE_LABELS, axis=1)
+    for col, color, marker in ((C.LABEL_IM, C.COLOR_IM, 'o'),
+                               (C.LABEL_HIM, C.COLOR_HIM, 's')):
+        if col in dnf.columns:
+            axes[0, 2].plot(dnf.index, dnf[col], f'{marker}-', color=color, lw=2,
+                            markersize=4, label=col)
+    axes[0, 2].set_ylabel('DNF (%)')
+    axes[0, 2].axvspan(*C.COVID_SPAN, alpha=0.12, color=C.COLOR_COVID, label=C.COVID_LABEL)
+    axes[0, 2].legend(fontsize=9)
+    mark_partial_season(axes[0, 2], dnf.index)
+    panel_tag(axes[0, 2], '(c)')
+
+    fig.tight_layout()
+    save(fig, 'Figure2.tiff')
+
+
+# --------------------------------------------------------------------------- 3
+def figure3(df) -> None:
+    """Transitions in minutes; the other four disciplines stay in hours.
+
+    Figure 2 in R1.
+    """
     fin = df[(df.race_type == 'im') & (df.finish_status == 'FIN')]
     fig, axes = plt.subplots(2, 3, figsize=(18, 10))
 
@@ -179,6 +263,7 @@ def figure2(df) -> None:
         ax.set_xlim(xlim)
         ax.set_xlabel('Minutes' if unit == 'minutes' else 'Hours')
         ax.set_ylabel('Count')
+        ax.yaxis.set_major_formatter(COUNT_FORMATTER)
         ax.legend(fontsize=9, loc='upper right')
         # Report the count actually drawn. `range=` clips the tail, and the
         # submitted figure labelled each panel with the unclipped n — so a reader
@@ -186,17 +271,59 @@ def figure2(df) -> None:
         # line is still computed over the full distribution; the caption says so.
         shown = int(((data >= xlim[0]) & (data <= xlim[1])).sum())
         clipped = len(raw) - shown
-        tag_text = f'{tag} {label} (n={shown:,}'
-        tag_text += f'; {clipped:,} outside axis)' if clipped else ')'
+        tag_text = f'{tag} {label} (n={thousands(shown)}'
+        tag_text += f'; {thousands(clipped)} outside axis)' if clipped else ')'
         panel_tag(ax, tag_text)
 
     fig.tight_layout()
-    save(fig, 'Figure2.tiff')
+    save(fig, 'Figure3.tiff')
 
 
-# --------------------------------------------------------------------------- 3
-def figure3(df) -> None:
-    """T1 and T2 side by side in every panel — the paper's contribution is both."""
+# --------------------------------------------------------------------------- 4
+def figure4(df) -> None:
+    """Participation by sex over time. Composition, not trend analysis.
+
+    Figure 5 in R1.
+    """
+    dy = year_frame(df)
+    counts = (dy[dy.gender.isin(['Male', 'Female'])]
+              .groupby(['race_year', 'gender']).size().unstack(fill_value=0))
+    fig, axes = plt.subplots(1, 2, figsize=(16, 5.5))
+
+    counts[['Male', 'Female']].plot.area(
+        ax=axes[0], color=[C.COLOR_IM, C.COLOR_HIM], alpha=0.85)
+    axes[0].set_ylabel('Records')
+    axes[0].set_xlabel('')
+    axes[0].legend(title='Sex')
+    axes[0].yaxis.set_major_formatter(mticker.FuncFormatter(
+        lambda x, _: f'{x / 1e3:.0f}K'))
+    mark_partial_season(axes[0], counts.index)
+    panel_tag(axes[0], '(a)')
+
+    by_type = (dy[dy.gender.isin(['Male', 'Female'])]
+               .groupby(['race_year', 'race_type']).gender
+               .apply(lambda s: (s == 'Female').mean() * 100).unstack())
+    by_type = C.relabel(by_type, C.RACE_TYPE_LABELS, axis=1)
+    for col, color in ((C.LABEL_IM, C.COLOR_IM), (C.LABEL_HIM, C.COLOR_HIM)):
+        if col in by_type.columns:
+            axes[1].plot(by_type.index, by_type[col], 'o-', color=color, lw=2,
+                         markersize=4, label=col)
+    axes[1].set_ylabel('Female share (%)')
+    axes[1].set_xlabel('')
+    axes[1].legend(title='Race Type', fontsize=9)
+    mark_partial_season(axes[1], by_type.index)
+    panel_tag(axes[1], '(b)')
+
+    fig.tight_layout()
+    save(fig, 'Figure4.tiff')
+
+
+# --------------------------------------------------------------------------- 5
+def figure5(df) -> None:
+    """T1 and T2 side by side in every panel — the paper's contribution is both.
+
+    Figure 3 in R1.
+    """
     fig, axes = plt.subplots(2, 2, figsize=(16, 10))
     dy = year_frame(df)
 
@@ -243,94 +370,6 @@ def figure3(df) -> None:
     for c in axes[1, 1].containers:
         axes[1, 1].bar_label(c, fmt='%.1f%%', fontsize=8, padding=2)
     panel_tag(axes[1, 1], '(d)')
-
-    fig.tight_layout()
-    save(fig, 'Figure3.tiff')
-
-
-# --------------------------------------------------------------------------- 4
-def figure4(df) -> None:
-    """Participation, finish time and non-completion over the covered period.
-
-    Three panels, not four. The submitted version carried a fourth showing the
-    female participation rate pooled across distances, which Figure 5(b) now
-    shows stratified by distance — the same quantity at higher resolution. It was
-    also the only panel in the paper that no sentence referred to. Keeping both
-    would publish one metric twice and invite exactly the question this round
-    spent its time answering.
-    """
-    dy = year_frame(df)
-    fin = dy[(dy.race_type == 'im') & (dy.finish_status == 'FIN')]
-    fig, axes = plt.subplots(1, 3, figsize=(21, 5.5))
-    axes = axes.reshape(1, 3)
-
-    yearly = dy.groupby(['race_year', 'race_type']).size().unstack(fill_value=0)
-    yearly = C.relabel(yearly, C.RACE_TYPE_LABELS, axis=1)
-    yearly.plot.area(ax=axes[0, 0], color=[C.COLOR_HIM, C.COLOR_IM], alpha=0.85)
-    axes[0, 0].legend(title='Race Type')
-    axes[0, 0].set_ylabel('Records')
-    axes[0, 0].set_xlabel('')
-    mark_partial_season(axes[0, 0], yearly.index)
-    panel_tag(axes[0, 0], '(a)')
-
-    med = fin.groupby('race_year').overall_sec.median() / 3600
-    axes[0, 1].plot(med.index, med.values, 'o-', color=C.COLOR_IM, lw=2, markersize=4)
-    axes[0, 1].set_ylabel('Hours')
-    axes[0, 1].axvspan(*C.COVID_SPAN, alpha=0.12, color=C.COLOR_COVID, label=C.COVID_LABEL)
-    axes[0, 1].legend(fontsize=9)
-    mark_partial_season(axes[0, 1], med.index)
-    panel_tag(axes[0, 1], '(b)')
-
-    starters = dy[dy.finish_status.isin(['FIN', 'DNF', 'DQ'])]
-    dnf = (starters.assign(is_dnf=starters.finish_status == 'DNF')
-           .groupby(['race_year', 'race_type']).is_dnf.mean().unstack() * 100)
-    dnf = C.relabel(dnf, C.RACE_TYPE_LABELS, axis=1)
-    for col, color, marker in ((C.LABEL_IM, C.COLOR_IM, 'o'),
-                               (C.LABEL_HIM, C.COLOR_HIM, 's')):
-        if col in dnf.columns:
-            axes[0, 2].plot(dnf.index, dnf[col], f'{marker}-', color=color, lw=2,
-                            markersize=4, label=col)
-    axes[0, 2].set_ylabel('DNF (%)')
-    axes[0, 2].axvspan(*C.COVID_SPAN, alpha=0.12, color=C.COLOR_COVID, label=C.COVID_LABEL)
-    axes[0, 2].legend(fontsize=9)
-    mark_partial_season(axes[0, 2], dnf.index)
-    panel_tag(axes[0, 2], '(c)')
-
-    fig.tight_layout()
-    save(fig, 'Figure4.tiff')
-
-
-# --------------------------------------------------------------------------- 5
-def figure5(df) -> None:
-    """Participation by sex over time. Composition, not trend analysis."""
-    dy = year_frame(df)
-    counts = (dy[dy.gender.isin(['Male', 'Female'])]
-              .groupby(['race_year', 'gender']).size().unstack(fill_value=0))
-    fig, axes = plt.subplots(1, 2, figsize=(16, 5.5))
-
-    counts[['Male', 'Female']].plot.area(
-        ax=axes[0], color=[C.COLOR_IM, C.COLOR_HIM], alpha=0.85)
-    axes[0].set_ylabel('Records')
-    axes[0].set_xlabel('')
-    axes[0].legend(title='Sex')
-    axes[0].yaxis.set_major_formatter(mticker.FuncFormatter(
-        lambda x, _: f'{x / 1e3:.0f}K'))
-    mark_partial_season(axes[0], counts.index)
-    panel_tag(axes[0], '(a)')
-
-    by_type = (dy[dy.gender.isin(['Male', 'Female'])]
-               .groupby(['race_year', 'race_type']).gender
-               .apply(lambda s: (s == 'Female').mean() * 100).unstack())
-    by_type = C.relabel(by_type, C.RACE_TYPE_LABELS, axis=1)
-    for col, color in ((C.LABEL_IM, C.COLOR_IM), (C.LABEL_HIM, C.COLOR_HIM)):
-        if col in by_type.columns:
-            axes[1].plot(by_type.index, by_type[col], 'o-', color=color, lw=2,
-                         markersize=4, label=col)
-    axes[1].set_ylabel('Female share (%)')
-    axes[1].set_xlabel('')
-    axes[1].legend(title='Race Type', fontsize=9)
-    mark_partial_season(axes[1], by_type.index)
-    panel_tag(axes[1], '(b)')
 
     fig.tight_layout()
     save(fig, 'Figure5.tiff')

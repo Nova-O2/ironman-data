@@ -1,16 +1,20 @@
 # A Validated, Population-Scale Dataset of 2.7 Million IRONMAN® Triathlon Records with Separated Transition Times (2002–2026)
 
-Companion repository — data-collection pipeline, analysis scripts, and figures — for the IRONMAN® triathlon dataset described in the accompanying manuscript (under review).
+Companion repository — data-collection pipeline, analysis scripts, and figures — for the IRONMAN® triathlon dataset described in the published article:
+
+> Seffrin, A.; Nikolaidis, P.T.; Andrade, M.S.; Villiger, E.; Rosemann, T.; Weiss, K.; Ferreira, D.; Knechtle, B. A Validated, Population-Scale Dataset of 2.7 Million IRONMAN® Triathlon Records with Separated Transition Times (2002–2026). *Sci* **2026**, *8*(9), 265. https://doi.org/10.3390/sci8090265
+
+Open access (CC BY 4.0), published 19 September 2026 under Open Peer Review: the review reports and the authors' responses are available with the article.
 
 ## Authors
 
 Aldo Seffrin¹ (ORCID 0000-0001-8229-8565), Pantelis Theodoros Nikolaidis² (0000-0001-8030-7122), Marilia Santos Andrade³ (0000-0002-7004-4565), Elias Villiger⁴ (0000-0001-8371-1390), Thomas Rosemann⁴ (0000-0002-6436-6306), Katja Weiss⁴ (0000-0003-1247-6754), Daniel Ferreira¹ (0000-0002-8958-9442), Beat Knechtle⁴ˌ⁵ (0000-0002-2412-9103)\*
 
-¹ Nova O2 Sports Science, São Paulo, Brazil
-² School of Health and Caring Sciences, University of West Attica, Athens, Greece
-³ Department of Physiology, Federal University of São Paulo (UNIFESP), São Paulo, Brazil
-⁴ Institute of Primary Care, University of Zurich, Zurich, Switzerland
-⁵ Medbase St. Gallen Am Vadianplatz, St. Gallen, Switzerland
+¹ Nova O2 Sports Science, São Paulo 12246-020, Brazil
+² School of Health and Caring Sciences, University of West Attica, 12243 Athens, Greece
+³ Department of Physiology, Federal University of São Paulo (UNIFESP), São Paulo 04023-062, Brazil
+⁴ Institute of Primary Care, University of Zurich, 8091 Zurich, Switzerland
+⁵ Medbase St. Gallen Am Vadianplatz, Vadianstrasse 26, 9001 St. Gallen, Switzerland
 
 \* Corresponding author
 
@@ -96,18 +100,24 @@ notebooks/
 
 figures/
 ├── Figure1.tiff                 # Dataset composition by source and race type
-├── Figure2.tiff                 # Split time distributions
-├── Figure3.tiff                 # Transition time coverage, T1 and T2
-├── Figure4.tiff                 # Temporal trends in participation and performance
-└── Figure5.tiff                 # Participation by sex over time
+├── Figure2.tiff                 # Temporal trends in participation and performance
+├── Figure3.tiff                 # Split time distributions
+├── Figure4.tiff                 # Participation by sex over time
+└── Figure5.tiff                 # Transition time coverage, T1 and T2
 ```
 
-## Notes on this revision
+## Notes on the revision history
 
 Script docstrings reference the review comments they answer, using the identifiers
-from the peer-review round (`R1-Rev1-*`, `R1-Rev2-*` for reviewer comments,
-`R1-Int-*` for issues the authors found themselves). The manuscript is under Open
-Review, so the reports and the point-by-point response are published with it.
+from the peer-review rounds (`R1-Rev1-*`, `R1-Rev2-*` for reviewer comments,
+`R1-Int-*` for issues the authors found themselves). The article was reviewed under
+Open Review, so the reports and the point-by-point responses are published with it.
+
+The figures were renumbered in the second round to follow their order of first
+citation (R1 → R2: 1→1, 4→2, 2→3, 5→4, 3→5); a figure number quoted in the
+first-round response letter refers to the old numbering. At proofreading the
+axis ticks and panel labels of Figures 1–3 were reformatted to the journal's number
+style (thousands separator from five digits up); the data drawn did not change.
 
 The two exploratory notebooks previously in `notebooks/` have been removed rather
 than updated. Both computed field coverage with a null check, which overstates it
