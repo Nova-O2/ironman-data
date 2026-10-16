@@ -29,7 +29,7 @@ Two distinct causes, and only one of them is a defect:
 The second is a reproducibility defect in a paper about reproducibility: someone
 running the pipeline from the repository would enumerate fewer race-years than
 the dataset contains, with no way to see why. It is repaired here rather than
-described in the Methods (author decision, 2026-08-25).
+described in the Methods (decision, Aldo, 2026-08-25).
 
 What the repair does and does not recover
 -----------------------------------------
@@ -65,13 +65,29 @@ EVENT_UUIDS_CSV = COLLECTION_DIR / 'event_uuids_full.csv'
 FIELDS = ['parent_slug', 'parent_uuid', 'subevent_name', 'subevent_id',
           'subevent_date', 'year', 'reconstructed']
 
-# Race-years recovered from the supplementary source, i.e. those absent from the
-# official platform. Measured by r1_overlap_census.py over the two raw sources and
-# independently reproducible from the merged file by counting distinct
-# (event_name, race_year) among source == 'coachcox'. The submitted Methods said
-# 388; both routes give 382 for the same 665,179 records (R1-Int-6).
-SUPPLEMENTARY_RACE_YEARS = 382
-SUPPLEMENTARY_RECORDS = 665_179
+# Race-years recovered from the supplementary source (absent from the official
+# platform) are measured by supplementary_from_merged() below; r1_overlap_census.py
+# gives the same numbers from the two raw sources. The submitted Methods said 388;
+# both routes give 382 race-years for 665,179 records on v3.0.0 (R1-Int-6).
+
+
+def supplementary_from_merged() -> tuple[int, int]:
+    """Race-years and records supplied by the supplementary source, measured.
+
+    Counted on the merged file as distinct (event_name, race_year) and rows among
+    source == 'coachcox'. Replaces the constants 382 / 665,179 (R1-Int-6, v3.0.0)
+    so the script holds for every dataset version (2026-10-15; v4.0.0 gives
+    903 / 1,481,278).
+    """
+    src = C.DATA_PATH if C.DATA_PATH.exists() else C.DATA_FALLBACK
+    keys: set[tuple[str, str]] = set()
+    records = 0
+    for chunk in pd.read_csv(src, usecols=['source', 'event_name', 'race_year'],
+                             dtype=str, keep_default_na=False, chunksize=500_000):
+        cc = chunk[chunk['source'] == 'coachcox']
+        records += len(cc)
+        keys.update(map(tuple, cc[['event_name', 'race_year']].drop_duplicates().to_numpy()))
+    return len(keys), records
 
 
 def read_discovery() -> list[dict]:
@@ -193,6 +209,7 @@ def main() -> None:
 
     # --- the numbers the Methods states ------------------------------------
     official_race_years = len(collected)
+    SUPPLEMENTARY_RACE_YEARS, SUPPLEMENTARY_RECORDS = supplementary_from_merged()
     summary = pd.DataFrame([{
         'event_series': len(parent_uuids),
         'subevents_enumerated': len(rows),
@@ -209,7 +226,7 @@ def main() -> None:
         'total_race_years': official_race_years + SUPPLEMENTARY_RACE_YEARS,
     }])
     path = C.write_result(summary, 'r1_event_coverage.csv', source_path=C.OFFICIAL_CSV)
-    print(f'-> {path.relative_to(C.PAPER_DIR)}')
+    print(f'-> {path}')
     print(f'\ntotal race-years across both sources: '
           f'{official_race_years + SUPPLEMENTARY_RACE_YEARS:,}')
     print('No retrieval percentage is reported: the enumerated and retrieved sets '

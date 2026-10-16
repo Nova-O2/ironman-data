@@ -1,0 +1,22 @@
+# generated: 2026-10-16T15:00:07+00:00
+# host: seffrin-server  python: 3.13.12  pandas: 3.0.2
+# source: ironman_dataset_deidentified.csv  bytes: 626330454  mtime: 2026-10-15T22:09:14+00:00
+# deterministic: no sampling, no randomness, no seed required
+check,status,detail
+deposit columns identical to v3,PASS,27 columns; v3 27; diff none; order same
+deposit line terminator CRLF like v3,PASS,"v4 CRLF, v3 CRLF"
+deposit has no name column,PASS,"bib, country, country_iso2, age_group, event_name, event_id, swim_sec, t1_sec, bike_sec, t2_sec, run_sec, overall_sec, finish_status, rank_overall, rank_gender, rank_group, swim_rank, bike_rank, run_rank, awa_points, swim_distance_km, bike_distance_km, run_distance_km, total_distance_km, race_type, race_year, source"
+deposit record count equals the QA count,PASS,"3,632,230 (r1_country_field: described 3,632,323 - redaction 93 = 3,632,230)"
+deposit carries no redaction marker,PASS,0 records
+source domain,PASS,"{'official': 2529950, 'coachcox': 1102280}"
+race_type domain,PASS,"{'im': 1299237, 'him': 2332993}"
+race_year range 2002-2026,PASS,"2002-2026, 25 seasons"
+finish_status domain,PASS,"{'FIN': 3003755, 'DNS': 389212, 'DNF': 216124, 'DQ': 12797, '': 10342}"
+blank finish_status only in unattributed official records,PASS,"10,342 blank, by source {'official': 10342} (v3: 10,342 official)"
+merge rule: no race-year in both sources,PASS,0 overlapping keys
+"supplementary race-years (name, year, type)",PASS,"702 supplementary, 1,485 official"
+exact duplicates on identifying tuple — official,PASS,"v4 10,312 extra rows in 10,312 groups (0.408%); v3 10,297 in 10,297 (0.504%)"
+exact duplicates on identifying tuple — coachcox,PASS,v4 94 extra rows in 94 groups (0.009%); v3 94 in 94 (0.014%)
+every v3 official race-year present in v4,PASS,0 lost
+v3 official record counts unchanged outside 2026,PASS,0 race-years changed
+every v3 supplementary race-year accounted for in v4,PASS,"239 still supplementary, 51 now official, 92 dropped by the merge as the same race as an official race-year (v3 defect), 0 unexplained"

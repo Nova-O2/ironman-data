@@ -1,0 +1,5 @@
+# generated: 2026-10-16T14:42:46+00:00
+# host: seffrin-server  python: 3.13.12  pandas: 3.0.2
+# source: ironman_dataset_deidentified.csv  bytes: 626330454  mtime: 2026-10-15T22:09:14+00:00
+# deterministic: no sampling, no randomness, no seed required
+event_id,event_name,race_year,race_type,records,dnf_records,overlap_share

@@ -8,7 +8,8 @@ Returns: flat JSON array of athlete objects with swim/T1/bike/T2/run splits in s
 Usage:
     python scraper.py                    # Scrape all known races (Kaggle IDs + 2025 scan)
     python scraper.py --ids 2199 2166    # Scrape specific race IDs
-    python scraper.py --scan-new         # Only scan for new 2025 race IDs
+    python scraper.py --scan-new         # Only scan for new race IDs above the known maximum
+    python scraper.py --refresh          # List the full catalogue; download races missing locally (2026-10-15, v4)
 """
 
 import requests
@@ -109,6 +110,107 @@ def scan_new_race_ids(start_id, end_id):
     return found
 
 
+
+
+def list_all_races():
+    """List every race CoachCox exposes (series index /all/im and /all/him).
+
+    Added 2026-10-15 (dataset v4). The March 2026 collection seeded race IDs from the
+    Kaggle 140.6 race list and scanned only above its maximum ID, so races CoachCox
+    lists but Kaggle did not (mostly 70.3, 2006-2022) were never requested. The series
+    index is the complete catalogue; returns {race_id: {rid, rn, ry, rd, exc, series,
+    ty, rg}}.
+    """
+    races = {}
+    for ty in ("im", "him"):
+        url = BASE_URL.replace("/race/results", f"/all/{ty}")
+        resp = requests.get(url, timeout=60)
+        resp.raise_for_status()
+        for sid, series in resp.json().items():
+            entries = series.get("races") or {}
+            if isinstance(entries, list):
+                entries = {str(r["rid"]): r for r in entries}
+            for rid, r in entries.items():
+                races[int(rid)] = {**r, "series": series.get("sn", ""),
+                                   "ty": series.get("ty", ""), "rg": series.get("rg", "")}
+        time.sleep(DELAY)
+    return races
+
+
+def fetch_race_info(race_id):
+    """Race metadata (/race/info/{id}) in the race_metadata.csv row format."""
+    from datetime import datetime
+    url = BASE_URL.replace("/race/results", "/race/info") + f"/{race_id}"
+    resp = requests.get(url, timeout=30)
+    resp.raise_for_status()
+    d = resp.json()
+    rd = d.get("rd") or ""
+    date_str = datetime.fromtimestamp(int(rd)).strftime("%Y-%m-%d") if rd else ""
+    return {"race_id": d.get("rid", race_id), "race_name": d.get("rn", ""),
+            "race_type": d.get("ty", ""), "region": d.get("rg", ""),
+            "race_date": date_str, "race_year": d.get("ry", ""), "unix_timestamp": rd}
+
+
+def refresh():
+    """--refresh: download every listed race whose race_{id}.json is missing.
+
+    Writes all_races_<date>.csv (the full CoachCox catalogue on the day) and appends
+    the metadata of the newly downloaded races to race_metadata.csv. Does not touch
+    the combined CSV: run combine_coachcox.py afterwards.
+    """
+    from datetime import datetime
+    stamp = f"{datetime.now():%Y-%m-%d}"
+    races = list_all_races()
+    index_path = Path(__file__).parent / f"all_races_{stamp}.csv"
+    with open(index_path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["race_id", "race_name", "race_year", "race_type",
+                                          "region", "series", "exclusions"])
+        w.writeheader()
+        for rid in sorted(races):
+            r = races[rid]
+            w.writerow({"race_id": rid, "race_name": r.get("rn", ""), "race_year": r.get("ry", ""),
+                        "race_type": r.get("ty", ""), "region": r.get("rg", ""),
+                        "series": r.get("series", ""), "exclusions": r.get("exc", "")})
+    missing = [rid for rid in sorted(races) if not (OUTPUT_DIR / f"race_{rid}.json").exists()]
+    print(f"Catalogue: {len(races)} races (index -> {index_path.name}); missing locally: {len(missing)}")
+
+    metadata_path = Path(__file__).parent / "race_metadata.csv"
+    known_meta = set()
+    if metadata_path.exists():
+        with open(metadata_path) as f:
+            known_meta = {row["race_id"] for row in csv.DictReader(f)}
+    progress = load_progress()
+    downloaded, empty, failed = [], [], []
+    for i, rid in enumerate(missing, 1):
+        print(f"[{i}/{len(missing)}] Race {rid} {races[rid].get('rn', '')}...", end=" ", flush=True)
+        data = fetch_race(rid)
+        if data is None:
+            failed.append(rid)
+            print("FAILED")
+        elif len(data) == 0:
+            empty.append(rid)
+            print("empty")
+        else:
+            save_race_json(rid, data)
+            downloaded.append(rid)
+            print(f"{len(data)} athletes")
+            if rid not in progress["completed"]:
+                progress["completed"].append(rid)
+            if str(rid) not in known_meta:
+                try:
+                    row = fetch_race_info(rid)
+                    with open(metadata_path, "a", newline="") as f:
+                        csv.DictWriter(f, fieldnames=list(row.keys())).writerow(row)
+                    known_meta.add(str(rid))
+                except Exception as e:  # noqa: BLE001
+                    print(f"  metadata failed for {rid}: {e}")
+            save_progress(progress)
+        time.sleep(DELAY)
+    progress["failed"] = sorted(set(progress.get("failed", [])) | set(failed))
+    save_progress(progress)
+    print(f"\nRefresh done: downloaded {len(downloaded)}, empty {len(empty)}, failed {len(failed)}: {failed}")
+
+
 def scrape_all(race_ids):
     """Scrape all given race IDs, save JSON + combined CSV."""
     progress = load_progress()
@@ -192,7 +294,10 @@ if __name__ == "__main__":
     known_ids = sorted(set(known_ids))
     print(f"Known race IDs from metadata: {len(known_ids)}")
 
-    if '--scan-new' in sys.argv:
+    if '--refresh' in sys.argv:
+        refresh()
+
+    elif '--scan-new' in sys.argv:
         # Scan for new race IDs beyond the known maximum
         max_known = max(known_ids)
         new_ids = scan_new_race_ids(max_known + 1, max_known + 500)

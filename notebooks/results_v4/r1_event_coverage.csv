@@ -1,0 +1,6 @@
+# generated: 2026-10-15T22:09:40+00:00
+# host: seffrin-server  python: 3.13.12  pandas: 3.0.2
+# source: ironman_official_all.csv  bytes: 597663854  mtime: 2026-10-15T15:30:04+00:00
+# deterministic: no sampling, no randomness, no seed required
+event_series,subevents_enumerated,official_race_years_with_results,official_records_total,official_records_event_attributed,official_records_unattributed,discovered_without_results,discovered_without_results_2021,reconstructed_rows,supplementary_race_years,supplementary_records,total_race_years
+177,1571,1478,2529950,2519608,10342,93,36,0,702,1102373,2180

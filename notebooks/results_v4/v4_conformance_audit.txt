@@ -1,0 +1,30 @@
+# generated: 2026-10-16T14:49:53+00:00
+v4 conformance audit — 2026-10-15
+
+[PASS] deposit columns identical to v3: 27 columns; v3 27; diff none; order same
+[PASS] deposit line terminator CRLF like v3: v4 CRLF, v3 CRLF
+[PASS] deposit has no name column: bib, country, country_iso2, age_group, event_name, event_id, swim_sec, t1_sec, bike_sec, t2_sec, run_sec, overall_sec, finish_status, rank_overall, rank_gender, rank_group, swim_rank, bike_rank, run_rank, awa_points, swim_distance_km, bike_distance_km, run_distance_km, total_distance_km, race_type, race_year, source
+
+Scanning v4 deposit ...
+[PASS] deposit record count equals the QA count: 3,632,230 (r1_country_field: described 3,632,323 - redaction 93 = 3,632,230)
+[PASS] deposit carries no redaction marker: 0 records
+[PASS] source domain: {'official': 2529950, 'coachcox': 1102280}
+[PASS] race_type domain: {'im': 1299237, 'him': 2332993}
+[PASS] race_year range 2002-2026: 2002-2026, 25 seasons
+[PASS] finish_status domain: {'FIN': 3003755, 'DNS': 389212, 'DNF': 216124, 'DQ': 12797, '': 10342}
+[PASS] blank finish_status only in unattributed official records: 10,342 blank, by source {'official': 10342} (v3: 10,342 official)
+[PASS] merge rule: no race-year in both sources: 0 overlapping keys
+[PASS] supplementary race-years (name, year, type): 702 supplementary, 1,485 official
+
+Scanning v3 deposit (baseline) ...
+[PASS] exact duplicates on identifying tuple — official: v4 10,312 extra rows in 10,312 groups (0.408%); v3 10,297 in 10,297 (0.504%)
+[PASS] exact duplicates on identifying tuple — coachcox: v4 94 extra rows in 94 groups (0.009%); v3 94 in 94 (0.014%)
+[PASS] every v3 official race-year present in v4: 0 lost
+[PASS] v3 official record counts unchanged outside 2026: 0 race-years changed
+  2026 editions re-downloaded with a different count: 0
+[PASS] every v3 supplementary race-year accounted for in v4: 239 still supplementary, 51 now official, 92 dropped by the merge as the same race as an official race-year (v3 defect), 0 unexplained
+  v3 supplementary records 665,124; v4 supplementary 1,102,280
+  2026 official: 132 editions, 216,768 records
+  2026 coachcox: 4 editions, 7,263 records
+
+17 checks, 0 FAIL

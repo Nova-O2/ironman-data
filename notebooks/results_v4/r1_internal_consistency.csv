@@ -1,0 +1,11 @@
+# generated: 2026-10-15T22:10:04+00:00
+# host: seffrin-server  python: 3.13.12  pandas: 3.0.2
+# source: ironman_merged.csv  bytes: 682457974  mtime: 2026-10-15T22:08:17+00:00
+# deterministic: no sampling, no randomness, no seed required
+tolerance_sec,n_within,pct_within,n_outside
+0,2088562,77.9,592519
+1,2634434,98.2601,46647
+5,2680809,99.9899,272
+10,2681014,99.9975,67
+30,2681014,99.9975,67
+60,2681014,99.9975,67

@@ -1,0 +1,23 @@
+# generated: 2026-10-15T22:10:18+00:00
+# host: seffrin-server  python: 3.13.12  pandas: 3.0.2
+# source: ironman_merged.csv  bytes: 682457974  mtime: 2026-10-15T22:08:17+00:00
+# deterministic: no sampling, no randomness, no seed required
+race_type,field,bound_lo_sec,bound_hi_sec,n_valued,n_flagged,flag_pct
+im,swim_sec,1800,9000,1037374,12214,1.1774
+im,t1_sec,30,1800,1018257,2093,0.2055
+im,bike_sec,10800,36000,1055440,7028,0.6659
+im,t2_sec,30,1800,1036534,4103,0.3958
+im,run_sec,7200,28800,1057551,10771,1.0185
+im,overall_sec,25200,61200,1060133,8458,0.7978
+him,swim_sec,1800,9000,1873645,217427,11.6045
+him,t1_sec,30,1800,1674093,2087,0.1247
+him,bike_sec,10800,36000,1931753,1014597,52.5221
+him,t2_sec,30,1800,1729430,2265,0.131
+him,run_sec,7200,28800,1940198,827362,42.6432
+him,overall_sec,25200,61200,1941727,1646589,84.8002
+him_proposed,swim_sec,900,4500,1873645,16900,0.902
+him_proposed,t1_sec,30,1800,1674093,2087,0.1247
+him_proposed,bike_sec,5400,18000,1931753,7327,0.3793
+him_proposed,t2_sec,30,1800,1729430,2265,0.131
+him_proposed,run_sec,3600,14400,1940198,4129,0.2128
+him_proposed,overall_sec,12600,32400,1941727,8578,0.4418

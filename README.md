@@ -18,24 +18,38 @@ Aldo Seffrin¹ (ORCID 0000-0001-8229-8565), Pantelis Theodoros Nikolaidis² (000
 
 \* Corresponding author
 
-## Dataset
+## Dataset versions
 
-| Metric | Value |
-|--------|-------|
-| Records described | 2,706,922 |
-| Records deposited | 2,706,867 |
-| Race-years | 1,554 |
-| Years | 2002–2026 (2026 partial; collected 27–28 March 2026) |
-| Full-distance (IRONMAN®) | 1,340,799 (49.5%) |
-| Half-distance (IRONMAN® 70.3) | 1,366,123 (50.5%) |
-| Source: official | 2,041,743 (75.4%) |
-| Source: supplement | 665,179 (24.6%) |
-| T1 / T2 coverage | 84.2% / 84.1% |
-| Cross-source agreement | 98.76% of 4,732,776 athlete-discipline pairs, over all 559 race-years present in both sources |
+The concept DOI https://doi.org/10.5281/zenodo.19284673 always resolves to the latest version. **The article describes version 3.0.0.** Cite the version you used.
 
-The described and deposited record counts differ by 55. Those records carried an
-explicit redaction applied by the supplementary source; that suppression is
-propagated into the deposit rather than reversed.
+| | Version 3.0.0 (described in the article) | Version 4.0.0 |
+|---|---|---|
+| Zenodo | [10.5281/zenodo.22097794](https://doi.org/10.5281/zenodo.22097794) | latest version under the concept DOI |
+| Collected | 27–28 March 2026 | 15 October 2026 (new material; March editions retained) |
+| Records described / deposited | 2,706,922 / 2,706,867 | 3,632,323 / 3,632,230 |
+| Race-years | 1,554 | 2,180 (1,478 official + 702 supplementary) |
+| Years | 2002–2026 (2026 partial) | 2002–2026 (2026 to 15 October, partial) |
+| Event series (official platform) | 128 | 177 |
+| Full / half distance | 49.5% / 50.5% | 35.8% / 64.2% |
+| Source: official / supplement | 75.4% / 24.6% | 69.7% / 30.3% |
+| T1 / T2 coverage | 84.2% / 84.1% | 78.3% / 78.5% |
+| Cross-source agreement | 98.76% of 4,732,776 pairs, 559 race-years | 99.23% of 9,600,332 pairs, 1,237 race-years |
+| Redacted records withdrawn from the deposit | 55 | 93 |
+
+Version 4.0.0 extends the 2026 season, adds 49 event series found by a systematic
+discovery on the organizer's website, replaces the March 2026 supplementary
+collection (947 races, seeded from a public race list) with the aggregator's full
+catalogue (2,330 races), and corrects the merge.
+
+**Defect in version 3.0.0, found on 15 October 2026.** The merge matched the two
+sources by event name only, and 66 race-years that the sources name differently
+("Ironman Sweden" / "IRONMAN Kalmar-Sweden") are present from both sources:
+127,164 deposited records (4.70%), 8,963 of them DNF records. The article's
+aggregator share (24.6%) and supplementary race-year count (382) are overstated by
+that amount. `notebooks/v3_duplicate_race_years.py` lists the affected records on
+the deposited v3 file (`notebooks/results/v3_duplicate_race_years.csv`); version
+4.0.0 applies the same athlete-level check inside the merge. Details in
+[`data/README.md`](data/README.md).
 
 ## Data availability
 
@@ -49,16 +63,19 @@ Collection scripts are in `data/collection/`; see [`data/README.md`](data/README
 pip install -r requirements.txt
 
 cd data/collection
-python scrape_official.py      # ~2-4h, official IRONMAN® platform
+python discover_events.py      # ~5min, event series from ironman.com (v4)
+python scrape_official.py      # ~2-4h, official IRONMAN® platform (--refresh to update)
 python combine_official.py     # JSON to CSV
 
-python scrape_coachcox.py      # ~30min, supplementary source
+python scrape_coachcox.py      # supplementary source (--refresh lists the full catalogue)
 python combine_coachcox.py     # JSON to CSV
 
-python merge_sources.py        # Merge into unified dataset
+python merge_sources.py        # Merge into unified dataset (athlete-level check since v4)
 ```
 
 Analysis scripts are in `notebooks/`. Each writes a CSV to `notebooks/results/`
+(version 3.0.0, the numbers in the article) or, with
+`IRONMAN_RESULTS_DIR=$PWD/results_v4`, to `notebooks/results_v4/` (version 4.0.0),
 carrying a provenance header — when it ran, against which input file, at what
 size, and in which environment. Every quantitative claim in the manuscript is
 checked against those files by `notebooks/r1_manuscript_number_audit.py`, which
@@ -67,7 +84,7 @@ exits non-zero on any mismatch.
 These scripts read the merged dataset. Download the deposited file from Zenodo
 and place it at `data/collection/ironman_merged.csv`, or rebuild it with the
 collection scripts above; note that the deposited file has athlete names removed
-and 55 fewer records, so analyses that depend on either will differ.
+and fewer records (55 in v3, 93 in v4), so analyses that depend on either will differ.
 
 ```bash
 python notebooks/r1_manuscript_number_audit.py   # verifies 100 claims
@@ -84,10 +101,12 @@ data/
 │   ├── scrape_coachcox.py       # Supplementary source scraper
 │   ├── combine_official.py      # Official JSON to CSV consolidation
 │   ├── combine_coachcox.py      # Supplementary JSON to CSV consolidation
-│   ├── merge_sources.py         # Deterministic merge procedure
-│   ├── event_uuids_full.csv     # 128 event series (official platform)
-│   ├── all_subevents.csv        # 1,235 race editions
-│   └── race_metadata.csv        # Supplementary race metadata
+│   ├── merge_sources.py         # Deterministic merge procedure (athlete-level check, v4)
+│   ├── discover_events.py       # Event series discovery from ironman.com (v4)
+│   ├── event_uuids_full.csv     # 177 event series (official platform; 128 in v3)
+│   ├── all_subevents.csv        # 1,571 race editions (v4); all_subevents_v3_2026-03.csv: v3
+│   ├── race_metadata.csv        # Supplementary race metadata (2,141 races)
+│   └── supplement_excluded.csv  # Races dropped by the merge, with the reason
 └── README.md                    # Reproduction instructions
 
 notebooks/
@@ -96,7 +115,10 @@ notebooks/
 ├── generate_tables.py           # Tables 1 and 2
 ├── r1_manuscript_number_audit.py# Verifies every manuscript number
 ├── r1_*.py                      # One analysis per script
-└── results/                     # Analysis outputs, with provenance headers
+├── v4_conformance_audit.py      # New version vs previous deposit (schema, merge, duplicates, continuity)
+├── v3_duplicate_race_years.py   # Race-years present from both sources in a deposit
+├── results/                     # Outputs on version 3.0.0, with provenance headers
+└── results_v4/                  # The same scripts on version 4.0.0
 
 figures/
 ├── Figure1.tiff                 # Dataset composition by source and race type

@@ -10,13 +10,14 @@ matplotlib default.
 
 import platform
 from datetime import datetime, timezone
+import os
 from pathlib import Path
 
 import pandas as pd
 
 # Every path resolves relative to this file, so the scripts run from a clone rather
 # than only on the machine they were written on. Audit finding A1-01: twelve of
-# thirteen scripts hardcoded an absolute path into the author's working tree, in a paper whose
+# thirteen scripts hardcoded an absolute /workspace/... path, in a paper whose
 # contribution is a reproducible pipeline.
 PAPER_DIR = Path(__file__).resolve().parents[1]
 RAW_DIR = PAPER_DIR.parents[1] / '_data_raw'
@@ -31,7 +32,10 @@ MERGE_SCRIPT = RAW_DIR / 'merge_sources.py'
 DEPOSIT_CSV = RAW_DIR / 'ironman_dataset_deidentified.csv'
 
 FIG_DIR = PAPER_DIR / 'figures'
-RESULTS_DIR = Path(__file__).resolve().parent / 'results'
+# IRONMAN_RESULTS_DIR redirects the outputs (added 2026-10-15 for the v4 refresh:
+# results/ stays the trace of the published v3 numbers; v4 runs write to results_v4/).
+RESULTS_DIR = Path(os.environ.get('IRONMAN_RESULTS_DIR',
+                                  Path(__file__).resolve().parent / 'results'))
 
 LABEL_IM = 'IRONMAN®'
 LABEL_HIM = 'IRONMAN® 70.3'

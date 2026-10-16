@@ -5,6 +5,7 @@ Downloads ALL race results from competitor.com API using discovered event UUIDs.
 Usage:
     python scrape_all.py                    # Scrape all events
     python scrape_all.py --list-subevents   # Just list subevents (dry run)
+    python scrape_all.py --refresh          # Re-list series; download missing + REFRESH_YEARS
 """
 
 import requests
@@ -28,6 +29,7 @@ UUID_FILE = SCRIPT_DIR / "event_uuids_full.csv"
 OUTPUT_DIR = SCRIPT_DIR / "results"
 PROGRESS_FILE = SCRIPT_DIR / "scrape_progress.json"
 SUBEVENTS_FILE = SCRIPT_DIR / "all_subevents.csv"
+REFRESH_YEARS = {"2026"}   # --refresh re-downloads these seasons even if the file exists
 
 
 def load_progress():
@@ -127,13 +129,24 @@ def save_json(data, filepath):
 
 def main():
     dry_run = "--list-subevents" in sys.argv
+    # --refresh (added 2026-10-15, dataset v4): re-list every series, download the
+    # subevents whose JSON file is missing and re-download every subevent of the
+    # years listed in REFRESH_YEARS (post-race corrections); ignore the progress
+    # file; write the subevent index to a dated file instead of overwriting
+    # all_subevents.csv, which carries the rows repaired in the R1 round.
+    refresh = "--refresh" in sys.argv
+    subevents_file = SUBEVENTS_FILE
+    if refresh:
+        subevents_file = SCRIPT_DIR / f"all_subevents_{datetime.now():%Y-%m-%d}.csv"
 
     events = load_uuids()
-    progress = load_progress()
+    progress = load_progress() if not refresh else {"completed": [], "failed": []}
     OUTPUT_DIR.mkdir(exist_ok=True)
 
     print(f"Events: {len(events)}")
     print(f"Already completed: {len(progress['completed'])}")
+    if refresh:
+        print(f"Refresh mode: missing files + years {sorted(REFRESH_YEARS)}; index -> {subevents_file.name}")
 
     all_subevents = []
     total_athletes = 0
@@ -182,7 +195,10 @@ def main():
             filename = f"{safe_name}_{year}.json"
             filepath = OUTPUT_DIR / filename
 
-            if se_id in progress["completed"]:
+            if refresh:
+                if filepath.exists() and year not in REFRESH_YEARS:
+                    continue
+            elif se_id in progress["completed"]:
                 print(f"    {se_name} — already done")
                 continue
 
@@ -207,11 +223,14 @@ def main():
 
     # Save subevents index
     if all_subevents:
-        with open(SUBEVENTS_FILE, "w", newline="") as f:
+        with open(subevents_file, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=all_subevents[0].keys())
             writer.writeheader()
             writer.writerows(all_subevents)
-        print(f"\nSubevents index: {SUBEVENTS_FILE} ({len(all_subevents)} entries)")
+        print(f"\nSubevents index: {subevents_file} ({len(all_subevents)} entries)")
+    if refresh:
+        save_progress(progress)   # failed list for the refresh run
+        print(f"Refresh done: {total_athletes:,} athletes downloaded; failed: {len(progress['failed'])}")
 
     if not dry_run:
         print(f"\n{'='*50}")
