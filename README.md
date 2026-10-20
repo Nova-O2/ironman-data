@@ -24,7 +24,7 @@ The concept DOI https://doi.org/10.5281/zenodo.19284673 always resolves to the l
 
 | | Version 3.0.0 (described in the article) | Version 4.0.0 |
 |---|---|---|
-| Zenodo | [10.5281/zenodo.22097794](https://doi.org/10.5281/zenodo.22097794) | latest version under the concept DOI |
+| Zenodo | [10.5281/zenodo.22097794](https://doi.org/10.5281/zenodo.22097794) | [10.5281/zenodo.23421027](https://doi.org/10.5281/zenodo.23421027) |
 | Collected | 27–28 March 2026 | 15 October 2026 (new material; March editions retained) |
 | Records described / deposited | 2,706,922 / 2,706,867 | 3,632,323 / 3,632,230 |
 | Race-years | 1,554 | 2,180 (1,478 official + 702 supplementary) |

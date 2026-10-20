@@ -7,7 +7,7 @@ This document describes how to reproduce the dataset from scratch, and which ver
 | Version | Zenodo | Collected | Merged records | Deposited records | Notes |
 |---|---|---|---|---|---|
 | 3.0.0 | [10.5281/zenodo.22097794](https://doi.org/10.5281/zenodo.22097794) | 27–28 March 2026 | 2,706,922 | 2,706,867 | **The version described in the article** (*Sci* 2026, 8(9), 265). Carries the merge defect described below: 66 race-years are present from both sources (127,164 deposited records, 4.7%). |
-| 4.0.0 | concept DOI [10.5281/zenodo.19284673](https://doi.org/10.5281/zenodo.19284673) (latest version) | 15 October 2026 (new material); March 2026 editions retained | 3,632,323 | 3,632,230 | 2026 season to 15 October; 49 event series added (177); the aggregator's full catalogue (2,330 races) instead of the 947 of March; merge corrected (athlete-level check). |
+| 4.0.0 | [10.5281/zenodo.23421027](https://doi.org/10.5281/zenodo.23421027) | 15 October 2026 (new material); March 2026 editions retained | 3,632,323 | 3,632,230 | 2026 season to 15 October; 49 event series added (177); the aggregator's full catalogue (2,330 races) instead of the 947 of March; merge corrected (athlete-level check). |
 
 The concept DOI always resolves to the latest version. Cite the version you used.
 
